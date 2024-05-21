@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'users/css/profile.css' %}">
+</head>
+<body>
+    <h1>Profile Page</h1>
+    <p>Username: {{ user.username }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Bio: {{ user.profile.bio }}</p>
+    <img src="{{ user.profile.image.url }}" alt="{{ user.username }}'s profile picture">
+</body>
+</html>
