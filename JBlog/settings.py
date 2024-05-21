@@ -43,6 +43,10 @@ INSTALLED_APPS = [
 
     # users app
     'users.apps.UsersConfig',
+
+    # crispy
+    'crispy_forms',
+    'crispy_bootstrap5',
 ]
 
 MIDDLEWARE = [
