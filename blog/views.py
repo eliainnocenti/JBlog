@@ -1,10 +1,10 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Post, Comment
-from .forms import CommentForm
+from django.contrib.auth.decorators import login_required
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
+from .models import Post
+from .forms import CommentForm
 
 def is_writer(user):
     return user.groups.filter(name='writers').exists()

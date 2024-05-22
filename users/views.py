@@ -1,11 +1,11 @@
-from django.contrib.auth.models import User
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .forms import UserRegisterForm, ProfileUpdateForm, ProfileReadOnlyForm
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-import logging
 from django.contrib.auth.views import LoginView, LogoutView
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
+import logging
+from .forms import UserRegisterForm, ProfileUpdateForm, ProfileReadOnlyForm
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +13,6 @@ def register(request):
     """
     Handle user registration. Display the registration form and save new user if form is valid.
     """
-
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
@@ -32,7 +31,6 @@ class CustomLoginView(LoginView):
     """
         Custom login view to handle redirection after login.
     """
-
     redirect_authenticated_user = True
     template_name = 'users/login.html'
 
@@ -50,7 +48,6 @@ class CustomLogoutView(LogoutView):
     """
     Custom logout view to handle redirection after logout.
     """
-
     #template_name = 'logout.html'  # custom template for logout confirmation page
     next_page = reverse_lazy('post_list')
 
@@ -68,7 +65,6 @@ def profile(request, username):
     """
     Display the profile of a user identified by the username. Requires login.
     """
-
     user = get_object_or_404(User, username=username)
     form = ProfileReadOnlyForm(instance=user.profile)
     return render(request, 'users/profile.html', {'user': user, 'form': form})
@@ -78,7 +74,6 @@ def profile_update(request):
     """
     Handle profile updates for the logged-in user. Requires login.
     """
-
     user = request.user
     if request.method == 'POST':
         u_form = ProfileUpdateForm(request.POST, instance=user)
