@@ -4,7 +4,7 @@ from django.contrib import messages
 from .forms import UserRegisterForm, ProfileUpdateForm, ProfileReadOnlyForm
 from django.contrib.auth.decorators import login_required
 import logging
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
 
 logger = logging.getLogger(__name__)
@@ -13,6 +13,7 @@ def register(request):
     """
     Handle user registration. Display the registration form and save new user if form is valid.
     """
+
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
@@ -28,22 +29,46 @@ def register(request):
     return render(request, 'users/register.html', {'form': form})
 
 class CustomLoginView(LoginView):
+    """
+        Custom login view to handle redirection after login.
+    """
+
     redirect_authenticated_user = True
     template_name = 'users/login.html'
 
     def get_success_url(self):
         if self.request.user.is_staff:
-            # Redirect admin users to the default admin site
+            # redirect admin users to the default admin site # TODO: is it a clever move?
             return reverse_lazy('admin:index')
         else:
             # Redirect regular users to their profile page
-            return reverse_lazy('profile', kwargs={'username': self.request.user.username})
+            #return reverse_lazy('profile', kwargs={'username': self.request.user.username})
+            # Redirect regular users to the home page
+            return reverse_lazy('post_list')
+
+class CustomLogoutView(LogoutView):
+    """
+    Custom logout view to handle redirection after logout.
+    """
+
+    #template_name = 'logout.html'  # custom template for logout confirmation page
+    next_page = reverse_lazy('post_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # add additional context data if needed
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        # custom logic before logout, if needed
+        return super().dispatch(request, *args, **kwargs)
 
 @login_required
 def profile(request, username):
     """
     Display the profile of a user identified by the username. Requires login.
     """
+
     user = get_object_or_404(User, username=username)
     form = ProfileReadOnlyForm(instance=user.profile)
     return render(request, 'users/profile.html', {'user': user, 'form': form})
@@ -53,6 +78,7 @@ def profile_update(request):
     """
     Handle profile updates for the logged-in user. Requires login.
     """
+
     user = request.user
     if request.method == 'POST':
         u_form = ProfileUpdateForm(request.POST, instance=user)

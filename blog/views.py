@@ -1,7 +1,33 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import Post
+from django.contrib.auth.decorators import login_required, user_passes_test
+from .models import Post, Comment
+from .forms import CommentForm
+from django.urls import reverse_lazy
+
+def is_writer(user):
+    return user.groups.filter(name='writers').exists()
+
+@login_required
+def home(request): # TODO: check if it's necessary to create a home.html file
+    group_name = 'writers'
+    return render(request, 'base.html', {'group_name': group_name})
+
+@login_required
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            return redirect('post_detail', pk=post.pk)
+    else:
+        form = CommentForm()
+    return render(request, 'blog/add_comment.html', {'form': form})
 
 class AboutView(TemplateView):
     """
@@ -40,12 +66,24 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     fields = ['title', 'content']
     template_name = 'blog/post_form.html'
 
+    def get_success_url(self):
+        """
+        Redirect to the list of posts after creating a new post.
+        """
+        return reverse_lazy('post_list')
+
     def form_valid(self, form):
         """
         Validate the form and set the author of the post to the current user.
         """
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+    def test_func(self):  # TODO: is it a redundant method? (the form_valid method should be enough, the author of a post must be in the writers group)
+        """
+        Check if the current user is in the writers group.
+        """
+        return is_writer(self.request.user)
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """

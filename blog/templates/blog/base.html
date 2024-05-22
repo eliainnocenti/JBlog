@@ -1,25 +1,45 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>My Blog</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}My Blog{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'blog/css/styles.css' %}">
 </head>
+
 <body>
-  <header>
-    <h1><a href="{% url 'post_list' %}">My Blog</a></h1>
-    <nav>
-      <ul>
-        <li><a href="{% url 'post_list' %}">Home</a></li>
-        <li><a href="{% url 'about' %}">About</a></li>
-        <!-- Add more navigation links here as needed -->
-      </ul>
-    </nav>
-  </header>
-  <main>
-    {% block content %}{% endblock %}
-  </main>
+
+    <div class="navbar">
+        <div class="container">
+            <div class="navbar__left">
+                <a href="{% url 'post_list' %}">{{ blog_name }}</a>
+            </div>
+            <div class="navbar__right">
+                {% if user.is_authenticated %}
+                    <p>Welcome, {{ user.username }}!</p>
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
   <footer>
-    <p>&copy; 2024 My Blog</p>
+    <p>&copy; 2024 JBlog</p>
   </footer>
+
 </body>
 </html>
