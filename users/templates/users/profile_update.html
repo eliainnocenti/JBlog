@@ -9,8 +9,8 @@
     <h1>Update Profile</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ u_form.as_p }}
-        {{ p_form.as_p }}
+        {{ u_form.as_p }} <!-- TODO: check -->
+        <!--{{ p_form.as_p }} TODO: check -->
         <button type="submit">Update</button>
     </form>
 </body>

@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 import logging
@@ -60,6 +61,15 @@ class CustomLogoutView(LogoutView):
         # custom logic before logout, if needed
         return super().dispatch(request, *args, **kwargs)
 
+def user_profile(request, username):
+    user_profile = get_object_or_404(User, username=username)
+    is_owner = (user_profile == request.user)
+    context = {
+        'user_profile': user_profile,
+        'is_owner': is_owner
+    }
+    return render(request, 'users/profile.html', context)
+
 @login_required
 def profile(request, username):
     """
@@ -69,12 +79,20 @@ def profile(request, username):
     form = ProfileReadOnlyForm(instance=user.profile)
     return render(request, 'users/profile.html', {'user': user, 'form': form})
 
+#@login_required
+#def profile(request, username):
+#    user = get_object_or_404(User, username=username)
+#    return render(request, 'users/profile.html', {'user_profile': user, 'is_owner': request.user == user})
+
 @login_required
-def profile_update(request):
+def profile_update(request, username):
     """
     Handle profile updates for the logged-in user. Requires login.
     """
-    user = request.user
+    user = get_object_or_404(User, username=username)
+    if request.user != user: # TODO: check
+        return HttpResponseForbidden("You are not authorized to update this profile.")
+
     if request.method == 'POST':
         u_form = ProfileUpdateForm(request.POST, instance=user)
         p_form = ProfileUpdateForm(request.POST, request.FILES, instance=user.profile)

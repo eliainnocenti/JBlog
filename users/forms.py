@@ -32,7 +32,7 @@ class UserRegisterForm(UserCreationForm):
         return email
 
 
-class ProfileUpdateForm(forms.ModelForm):
+class ProfileUpdateForm(forms.ModelForm): # FIXME: update
     """
     Form for updating user profile.
     """
@@ -42,8 +42,12 @@ class ProfileUpdateForm(forms.ModelForm):
         model = User
         fields = ['username', 'email']
 
+#class UserUpdateForm(forms.ModelForm): # TODO: check
+#    class Meta:
+#        model = User
+#        fields = ['username', 'email']
 
-class ProfileReadOnlyForm(forms.ModelForm):
+class ProfileReadOnlyForm(forms.ModelForm): # FIXME: update
     """
     Read-only form for displaying user profile image.
     """
