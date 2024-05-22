@@ -3,6 +3,10 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post
 
+def about(request):
+    # Add any context data or logic for the about page here
+    return render(request, 'blog/about.html')
+
 class PostListView(ListView):
     """
     View for displaying a list of blog posts.

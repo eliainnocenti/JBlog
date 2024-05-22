@@ -85,6 +85,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'JBlog.wsgi.application'
 
+#LOGIN_REDIRECT_URL = '/blog/' # redirect to blog page after login
+
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

@@ -4,6 +4,8 @@ from django.contrib import messages
 from .forms import UserRegisterForm, ProfileUpdateForm, ProfileReadOnlyForm
 from django.contrib.auth.decorators import login_required
 import logging
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +26,18 @@ def register(request):
     else:
         form = UserRegisterForm()
     return render(request, 'users/register.html', {'form': form})
+
+class CustomLoginView(LoginView):
+    redirect_authenticated_user = True
+    template_name = 'users/login.html'
+
+    def get_success_url(self):
+        if self.request.user.is_staff:
+            # Redirect admin users to the default admin site
+            return reverse_lazy('admin:index')
+        else:
+            # Redirect regular users to their profile page
+            return reverse_lazy('profile', kwargs={'username': self.request.user.username})
 
 @login_required
 def profile(request, username):
