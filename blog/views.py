@@ -10,7 +10,7 @@ def is_writer(user):
     return user.groups.filter(name='writers').exists()
 
 @login_required
-def home(request): # TODO: check if it's necessary to create a home.html file
+def home(request): # TODO: check if this method is necessary
     group_name = 'writers'
     return render(request, 'base.html', {'group_name': group_name})
 
@@ -35,7 +35,7 @@ class AboutView(TemplateView):
     """
     template_name = 'blog/about.html'
 
-    # You can add any additional methods here if needed
+    # you can add any additional methods here if needed
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Add any context data here if needed

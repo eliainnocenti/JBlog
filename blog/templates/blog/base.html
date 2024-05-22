@@ -12,26 +12,31 @@
 </head>
 
 <body>
-
-    <div class="navbar">
-        <div class="container">
-            <div class="navbar__left">
-                <a href="{% url 'post_list' %}">{{ blog_name }}</a>
-            </div>
-            <div class="navbar__right">
-                {% if user.is_authenticated %}
-                    <p>Welcome, {{ user.username }}!</p>
-                    <form action="{% url 'logout' %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit">Logout</button>
-                    </form>
-                {% else %}
-                    <a href="{% url 'login' %}">Login</a>
-                    <a href="{% url 'register' %}">Register</a>
-                {% endif %}
+    <header>
+        <div class="navbar">
+            <div class="container">
+                <!-- TODO: check navbar__left -->
+                <div class="navbar__left">
+                    <a href="{% url 'post_list' %}">{{ block.super }}</a>
+                </div>
+                <div class="navbar__center">
+                    JBlog
+                </div>
+                <div class="navbar__right">
+                    {% if user.is_authenticated %}
+                        <p>Welcome, {{ user.username }}!</p>
+                        <form action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit">Logout</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login' %}">Login</a>
+                        <a href="{% url 'register' %}">Register</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
-    </div>
+    </header>
 
     <div class="content">
         {% block content %}

@@ -9,6 +9,9 @@ from .views import (
     add_comment
 )
 
+# TODO: check paths
+# TODO: check about page
+
 urlpatterns = [
     path('', PostListView.as_view(), name='post_list'),                           # URL pattern for displaying list of posts
     path('about/', AboutView.as_view(), name='about'),                            # URL pattern for the about view
