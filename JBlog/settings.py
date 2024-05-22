@@ -14,6 +14,7 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -64,7 +65,12 @@ ROOT_URLCONF = 'JBlog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            #os.path.join(BASE_DIR, 'blog', 'templates'),  # add the templates directory for the blog app
+            #os.path.join(BASE_DIR, 'users', 'templates'),  # add the templates directory for the users app
+            '/Users/eliainnocenti/Documents/Projects/Django/JBlog/blog/templates/blog',  # add the templates directory for the blog app
+            '/Users/eliainnocenti/Documents/Projects/Django/JBlog/users/templates/users',  # add the templates directory for the users app
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

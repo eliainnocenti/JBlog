@@ -36,3 +36,5 @@ class Profile(models.Model):
                 os.makedirs(os.path.dirname(self.image.path))
 
             img.save(self.image.path)
+
+    # add more methods here if needed
