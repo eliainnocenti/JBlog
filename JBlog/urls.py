@@ -15,16 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from users import views as user_views                   # TODO: check alias
-from django.contrib.auth import views as auth_views     # TODO: check alias
-
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('blog/', include('blog.urls')),        # include blog app urls  # FIXME
-    path('users/', include('users.urls')),      # include users app urls # FIXME
+    path('', include('blog.urls')),             # include blog app urls
+    path('users/', include('users.urls')),      # include users app urls
 ]
 
 if settings.DEBUG:

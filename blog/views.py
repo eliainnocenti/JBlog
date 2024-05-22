@@ -1,11 +1,20 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post
 
-def about(request):
-    # Add any context data or logic for the about page here
-    return render(request, 'blog/about.html')
+class AboutView(TemplateView):
+    """
+    View for displaying the about page.
+    """
+    template_name = 'blog/about.html'
+
+    # You can add any additional methods here if needed
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add any context data here if needed
+        return context
+
 
 class PostListView(ListView):
     """
